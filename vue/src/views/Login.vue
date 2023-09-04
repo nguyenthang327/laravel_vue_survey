@@ -13,7 +13,7 @@
   </div>
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-    <form class="space-y-6" action="#" method="POST">
+    <form class="space-y-6" @submit="login">
       <div>
         <label
           for="email"
@@ -27,6 +27,7 @@
             type="email"
             autocomplete="email"
             required=""
+            v-model="user.email"
             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>
@@ -54,6 +55,7 @@
             type="password"
             autocomplete="current-password"
             required=""
+            v-model="user.password"
             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>
@@ -73,12 +75,31 @@
       Not a member?
       {{ " " }}
       <router-link
-        :to="{name: 'Register'}"
+        :to="{ name: 'Register' }"
         class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
         >Register for free</router-link
       >
     </p>
   </div>
 </template>
-<script></script>
+<script setup>
+import { useRouter } from "vue-router";
+import store from "../store";
+
+const router = useRouter();
+const user = {
+  email: "",
+  password: "",
+  remember: false,
+};
+
+function login(ev) {
+  ev.preventDefault();
+  store.dispatch("login", user).then(() => {
+    router.push({
+      name: "Dashboard",
+    });
+  });
+}
+</script>
 <style scoped></style>
