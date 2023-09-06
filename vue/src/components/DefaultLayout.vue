@@ -68,7 +68,9 @@
                     <MenuItem v-slot="{ active }">
                       <a
                         @click="logout"
-                        :class="['block px-4 py-2 text-sm text-gray-700 cursor-pointer']"
+                        :class="[
+                          'block px-4 py-2 text-sm text-gray-700 cursor-pointer',
+                        ]"
                         >Sign out</a
                       >
                     </MenuItem>
@@ -184,12 +186,13 @@ export default {
   setup() {
     const store = useStore();
     const router = useRouter();
-    
-    function logout(){
-      store.commit('logout');
-      router.push({
-        name: 'Login',
-      })
+
+    function logout() {
+      store.dispatch("logout").then(() => {
+        router.push({
+          name: "Login",
+        });
+      });
     }
 
     return {
@@ -200,3 +203,9 @@ export default {
   },
 };
 </script>
+
+<style>
+body {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+</style>
