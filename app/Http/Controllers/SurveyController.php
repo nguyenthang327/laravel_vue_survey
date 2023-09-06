@@ -13,9 +13,10 @@ class SurveyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $requst)
     {
         //
+        $user = $request->user
     }
 
     /**
