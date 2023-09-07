@@ -22,7 +22,7 @@ class CreateSurveysTable extends Migration
             $table->tinyInteger('status');
             $table->text('description')->nullable();
             $table->timestamps();
-            $table->timestamp('expired_date')->nullable();
+            $table->timestamp('expire_date')->nullable();
         });
     }
 

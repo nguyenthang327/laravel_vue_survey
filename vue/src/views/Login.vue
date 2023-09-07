@@ -127,7 +127,6 @@ function login(ev) {
       });
     })
     .catch((err) => {
-      console.log(err.response.data);
       errorMsg.value = err.response.data.error;
     });
 }
