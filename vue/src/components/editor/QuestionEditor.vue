@@ -213,12 +213,12 @@ function getOptions(){
 }
 
 function setOptions(options){
-  model.value.data.options = options
+  model.value.data.options = options;
 }
 
 // add option
 function addOption(){
-  setOPtions([
+  setOptions([
     ...getOptions(),
     { uuid: uuidv4(), text: ""}
   ]);

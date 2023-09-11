@@ -290,5 +290,15 @@ function saveSurvey() {
     });
   });
 }
+
+function deleteSurvey(){
+  if(confirm(`Are you sure you want to delete this survey?  Operation can't be undone!!`)){
+    store.dispatch("deleteSurvey", model.value.id).then(() => {
+      router.push({
+        name: "Surveys",
+      })
+    })
+  }
+}
 </script>
 <style lang=""></style>

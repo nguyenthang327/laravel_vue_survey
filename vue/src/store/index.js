@@ -1,89 +1,20 @@
 import { createStore } from "vuex";
 import axiosClient from "../axios";
 
-const tmpSurveys = [
-  {
-    id: 100,
-    title: "hihi",
-    slug: "hihi-a",
-    status: "draft",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Laravel.svg/1200px-Laravel.svg.png",
-    description: "hey",
-    created_at: "2021-12-20 18:00:00",
-    updated_at: "2021-12-20 18:00:00",
-    expired_at: "2021-12-20 18:00:00",
-    questions: [
-      {
-        id: 1,
-        type: "select",
-        question: "from which country are you?",
-        description: null,
-        data: {
-          options: [
-            {
-              uuid: "sadfasdf",
-              text: "js",
-            },
-            {
-              uuid: "sadfasdf2",
-              text: "php",
-            },
-          ],
-        },
-      },
-      {
-        id: 2,
-        type: "checkbox",
-        question: "from which country are you 2?",
-        description: null,
-        data: {
-          options: [
-            {
-              uuid: "sadfasdf",
-              text: "js",
-            },
-            {
-              uuid: "sadfasdf2",
-              text: "react",
-            },
-          ],
-        },
-      },
-      {
-        id: 3,
-        type: "text",
-        question: "from which country are you 2?",
-        description: null,
-        data: {},
-      },
-    ],
-  },
-  {
-    id: 200,
-    title: "ss",
-    slug: "22-a",
-    status: "active",
-    image: "",
-    description: "",
-    created_at: "2021-12-20 18:00:00",
-    updated_at: "2021-12-20 18:00:00",
-    expired_at: "2021-12-20 18:00:00",
-    questions: [],
-  },
-];
-
 const store = createStore({
   state: {
     user: {
       data: {},
       token: sessionStorage.getItem("TOKEN"),
     },
-    currentSurvey:{
+    currentSurvey: {
       loading: false,
       data: {},
     },
-    surveys: [...tmpSurveys],
+    surveys: {
+      loading: false,
+      data: [],
+    },
     questionTypes: ["text", "select", "radio", "checkbox", "textarea"],
   },
   getters: {},
@@ -106,8 +37,22 @@ const store = createStore({
         return response;
       });
     },
+    getSurvey({ commit }, id) {
+      commit("setCurrentSurveyLoading", true);
+      return axiosClient
+        .get(`/survey/${id}`)
+        .then((res) => {
+          commit("setCurrentSurvey", res.data);
+          commit("setCurrentSurveyLoading", false);
+          return res;
+        })
+        .catch((err) => {
+          commit("setCurrentSurveyLoading", false);
+          throw err;
+        });
+    },
     saveSurvey({ commit }, survey) {
-      delete survey.image_url
+      delete survey.image_url;
       let response;
       if (survey.id) {
         response = axiosClient
@@ -124,16 +69,16 @@ const store = createStore({
       }
       return response;
     },
-    getSurvey({commit}, id){
-      commit('setCurrentSurveyLoading', true);
-      return axiosClient.get(`/survey/${id}`).then((res) => {
-        commit("setCurrentSurvey", res.data);
-        commit("setCurrentSurveyLoading", false);
+    deleteSurvey({ commit }, id) {
+      return axiosClient.delete(`/survey/${id}`);
+    },
+    getSurveys({ commit }) {
+      commit("setSurveysLoading", true);
+      return axiosClient.get(`/survey`).then((res) => {
+        commit("setSurveysLoading", false);
+        commit("setSurveys", res.data);
         return res;
-      }).catch((err) => {
-        commit('setCurrentSurveyLoading', false);
-        throw err;
-      })
+      });
     },
   },
   mutations: {
@@ -152,7 +97,13 @@ const store = createStore({
     },
     setCurrentSurvey: (state, survey) => {
       state.currentSurvey.data = survey.data;
-    }
+    },
+    setSurveysLoading: (state, loading) => {
+      state.surveys.loading = loading;
+    },
+    setSurveys: (state, surveys) => {
+      state.surveys.data = surveys.data;
+    },
   },
   modules: {},
 });

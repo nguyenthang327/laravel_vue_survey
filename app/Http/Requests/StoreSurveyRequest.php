@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class StoreSurveyRequest extends FormRequest
 {
@@ -37,6 +38,7 @@ class StoreSurveyRequest extends FormRequest
             'status' => 'required|boolean',
             'description' => 'nullable|string',
             'expire_date' => 'nullable|date|after:tomorrow',
+            'questions' => 'array',
         ];
     }
 }
