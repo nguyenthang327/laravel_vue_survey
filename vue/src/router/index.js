@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import DefaultLayout from '../components/DefaultLayout.vue';
 import AuthLayout from '../components/AuthLayout.vue';
+import SurveyPublicView from '../views/SurveyPublicView.vue';
 import Dashboard from '../views/Dashboard.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
@@ -40,6 +41,11 @@ const routes = [
                 component: Register
             }
         ]
+    },
+    {
+        path: '/view/survey/:slug',
+        name:'SurveyPublicView',
+        component: SurveyPublicView
     }
     // {
     //     path: '/login',

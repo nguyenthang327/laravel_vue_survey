@@ -78,14 +78,31 @@ const store = createStore({
     deleteSurvey({ commit }, id) {
       return axiosClient.delete(`/survey/${id}`);
     },
-    getSurveys({ commit }, {url = null} = {}) {
-      url = url || '/survey';
+    getSurveys({ commit }, { url = null } = {}) {
+      url = url || "/survey";
       commit("setSurveysLoading", true);
       return axiosClient.get(url).then((res) => {
         commit("setSurveysLoading", false);
         commit("setSurveys", res.data);
         return res;
       });
+    },
+    getSurveyBySlug({ commit }, slug) {
+      commit("setCurrentSurveyLoading", true);
+      return axiosClient
+        .get(`/survey-by-slug/${slug}`)
+        .then((res) => {
+          commit("setCurrentSurvey", res.data);
+          commit("setCurrentSurveyLoading", false);
+          return res;
+        })
+        .catch((err) => {
+          commit("setCurrentSurveyLoading", false);
+          throw err;
+        });
+    },
+    saveSurveyAnswer({ commit }, { surveyID, answers }) {
+      return axiosClient.post(`/survey/${surveyID}/answer`, { answers });
     },
   },
   mutations: {
@@ -112,14 +129,14 @@ const store = createStore({
       state.surveys.data = surveys.data;
       state.surveys.links = surveys.meta.links;
     },
-    notify: (state, {message, type}) => {
+    notify: (state, { message, type }) => {
       state.notification.show = true;
       state.notification.type = type;
       state.notification.message = message;
       setTimeout(() => {
         state.notification.show = false;
-      }, 3000)
-    }
+      }, 3000);
+    },
   },
   modules: {},
 });
